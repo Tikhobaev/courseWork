@@ -32,11 +32,6 @@ void main()
 		setDataFromFile(&base, filename);
 	}
 	do {
-		//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		// В СОРТИРОВКАХ И БИНПОИСКЕ ПОМЕНЯТЬ НАЗВАНИЯ, ДОБАВИТЬ ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ ИЗ ФАЙЛА
-		//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		//TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 		printf("\n-----------------Вас приветствует база данных жилого дома №%d -----------------\n", base.houseNum);
 		printf("Введите:\n");
 		printf("	 1 - добавить нового человека в базу данных \n");
