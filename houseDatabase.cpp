@@ -4,10 +4,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <locale.h>
 #include "houseDatabase.h"
 #define nameLen 40
 #define surnameLen 40
 #define maxFilenameLength 40
+
 void setData(houseDatabase* base){
 	(*base).houseRoomers = (roomer*)malloc(sizeof(roomer));
 	(*base).sortedByName = (int*)malloc(sizeof(int));
@@ -23,12 +25,13 @@ void printAllRoomers(houseDatabase* base)   //фукнция для вывода всех жильцов на
 		printf("База пуста\n");
 		return;
 	}
-	printf("\n\nВыберите, отсортированно по какому параметру вывести информацию о жильцах\n"
-		"	* 1 - по имени\n"
-		"	* 2 - по фамилии\n"
-		"	* 3 - по номеру квартиры\n"
-		"	* 4 - по возрасту\n"
-		"	* 5 - по размеру задолженности\n");
+	printf("\n\nВыберите, отсортированно по какому параметру вывести информацию о жильцах\n");
+	printf("\nВведите:\n");
+	printf("	 1 - по имени\n");
+	printf("	 2 - по фамилии\n");
+	printf("	 3 - по номеру квартиры\n");
+	printf("	 4 - по возрасту\n");
+	printf("	 5 - по размеру задолженности\n\n");
 	int userInput = 1;
 	scanf("%d", &userInput);
 	if (userInput == 1){
@@ -36,11 +39,11 @@ void printAllRoomers(houseDatabase* base)   //фукнция для вывода всех жильцов на
 		for (int i = 0; i < (*base).count; i++)
 		{
 			printf("%d) %s %s  номер квартиры: %d  возраст: %d задолженность(руб): %d \n", i + 1,
-				(*base).houseRoomers[base->sortedByName[i]].name,
-				(*base).houseRoomers[base->sortedByName[i]].surname,
-				(*base).houseRoomers[base->sortedByName[i]].flatNum,
-				(*base).houseRoomers[base->sortedByName[i]].age,
-				(*base).houseRoomers[base->sortedByName[i]].debt);
+				base->houseRoomers[base->sortedByName[i]].name,
+				base->houseRoomers[base->sortedByName[i]].surname,
+				base->houseRoomers[base->sortedByName[i]].flatNum,
+				base->houseRoomers[base->sortedByName[i]].age,
+				base->houseRoomers[base->sortedByName[i]].debt);
 		}
 	}
 	if (userInput == 2){
@@ -69,19 +72,19 @@ void printAllRoomers(houseDatabase* base)   //фукнция для вывода всех жильцов на
 	}
 	if (userInput == 4){
 		printf("\n\n**********Список жильцов дома номер %d**********\n\n", base->houseNum);
-		for (int i = 0; i < (*base).count; i++)
+		for (int i = 0; i < base->count; i++)
 		{
 			printf("%d) %s %s  номер квартиры: %d  возраст: %d задолженность(руб): %d \n", i + 1,
-				(*base).houseRoomers[base->sortedByAge[i]].name,
-				(*base).houseRoomers[base->sortedByAge[i]].surname,
-				(*base).houseRoomers[base->sortedByAge[i]].flatNum,
-				(*base).houseRoomers[base->sortedByAge[i]].age,
-				(*base).houseRoomers[base->sortedByAge[i]].debt);
+				base->houseRoomers[base->sortedByAge[i]].name,
+				base->houseRoomers[base->sortedByAge[i]].surname,
+				base->houseRoomers[base->sortedByAge[i]].flatNum,
+				base->houseRoomers[base->sortedByAge[i]].age,
+				base->houseRoomers[base->sortedByAge[i]].debt);
 		}
 	}
 	if (userInput == 5){
 		printf("\n\n**********Список жильцов дома номер %d**********\n\n", base->houseNum);
-		for (int i = 0; i < (*base).count; i++)
+		for (int i = 0; i < base->count; i++)
 		{
 			printf("%d) %s %s  номер квартиры: %d  возраст: %d задолженность(руб): %d \n", i + 1,
 				(*base).houseRoomers[base->sortedByDebt[i]].name,
@@ -98,25 +101,32 @@ void addRoomer(houseDatabase* base)   //функция добавляет нового жильца в базу д
 {
 	simpleAdd(base);
 	printf("\n Введите имя жильца \n");
-	scanf("%s", &((*base).houseRoomers[(*base).count - 1].name));
+	scanf("%s", base->houseRoomers[base->count - 1].name);
 	printf("\n Введите фамилию жильца \n");
-	scanf("%s", &((*base).houseRoomers[(*base).count - 1].surname));
+	scanf("%s", base->houseRoomers[base->count - 1].surname);
 	printf("\n Введите номер квартиры жильца\n");
-	scanf("%d", &((*base).houseRoomers[(*base).count - 1].flatNum));
+	scanf("%d", &(base->houseRoomers[base->count - 1].flatNum));
 	printf("\n Введите возраст жильца \n");
-	scanf("%d", &((*base).houseRoomers[(*base).count - 1].age));
+	scanf("%d", &(base->houseRoomers[base->count - 1].age));
 	printf("\n Введите задолженность жильца(руб) \n");
-	scanf("%d", &((*base).houseRoomers[(*base).count - 1].debt));
+	scanf("%d", &(base->houseRoomers[base->count - 1].debt));
 	simpleSort(base);
 }
 void deleteRoomer(houseDatabase* base){
 	int userInput;
 	do {
-		printf(" ------Меню удаления  жильца по параметрам------ \n");
+		printf("\n\n------Меню удаления  жильца по параметрам------ \n");
 		printf("Введите имя, фамилию, номер квартиры или возраст жильца, информацию о котором хотите редактировать\n");
-		printf("\n Введите \n  * 1, если вы знаете имя \n  * 2, если знаете фамилию \n  * 3, если знаете номер квартиры \n  * 4, если знаете возраст\n");
-		printf("  * 5, если знаете размер задолженности\n\n");
-		printf("**** Введите любое отрицательное целое число для выхода из меню удаления ****\n");
+		printf("\nВведите:\n");
+		printf("	 1 - если знаете имя\n");
+		printf("	 2 - если знаете фамилию\n");
+		printf("	 3 - если знаете номер квартиры\n");
+		printf("	 4 - если знаете возраст\n");
+		printf("	 5 -  если знаете размер задолженности\n");
+		printf("	 0 -  для выходя из меню удаления\n\n");
+		//printf("\n Введите \n  * 1, если вы знаете имя \n  * 2, если знаете фамилию \n  * 3, если знаете номер квартиры \n  * 4, если знаете возраст\n");
+		//printf("  * 5, если знаете размер задолженности\n\n");
+		//printf("**** Введите 0 для выхода из меню удаления ****\n");
 		scanf("%d", &userInput);
 		if (userInput == 1)    //
 		{
@@ -146,20 +156,23 @@ void deleteRoomer(houseDatabase* base){
 				int input = 0;
 				scanf("%d", &input);
 				if (input <= justNumber && input >= 1){
+
 					//на место выбранного жильца перезаписываем последнего жильца
 					strcpy(base->houseRoomers[base->sortedByName[foundIndex + input - 1]].name, base->houseRoomers[base->count - 1].name);
 					strcpy(base->houseRoomers[base->sortedByName[foundIndex + input - 1]].surname, base->houseRoomers[base->count - 1].surname);
 					base->houseRoomers[base->sortedByName[foundIndex + input - 1]].flatNum = base->houseRoomers[base->count - 1].flatNum;
 					base->houseRoomers[base->sortedByName[foundIndex + input - 1]].age = base->houseRoomers[base->count - 1].age;
 					base->houseRoomers[base->sortedByName[foundIndex + input - 1]].debt = base->houseRoomers[base->count - 1].debt;
-					//уменьшаем на 1 размер 5 массивов(последний элемент будет удалён)
-					(*base).houseRoomers = (roomer*)realloc((*base).houseRoomers, ((*base).count - 1)*sizeof(roomer));
-					(*base).sortedByName = (int*)realloc((*base).sortedByName, ((*base).count - 1)*sizeof(int));
-					(*base).sortedBySurname = (int*)realloc((*base).sortedBySurname, ((*base).count - 1)*sizeof(int));
-					(*base).sortedByFlatNum = (int*)realloc((*base).sortedByFlatNum, ((*base).count - 1)*sizeof(int));
-					(*base).sortedByAge = (int*)realloc((*base).sortedByAge, ((*base).count - 1)*sizeof(int));
-					(*base).sortedByDebt = (int*)realloc((*base).sortedByDebt, ((*base).count - 1)*sizeof(int));
-					(*base).count--;
+
+					//уменьшаем на 1 размер 6 массивов(последний элемент будет удалён)
+					base->houseRoomers = (roomer*)realloc(base->houseRoomers, (base->count - 1)*sizeof(roomer));
+					base->sortedByName = (int*)realloc(base->sortedByName, (base->count - 1)*sizeof(int));
+					base->sortedBySurname = (int*)realloc(base->sortedBySurname, (base->count - 1)*sizeof(int));
+					base->sortedByFlatNum = (int*)realloc(base->sortedByFlatNum, (base->count - 1)*sizeof(int));
+					base->sortedByAge = (int*)realloc(base->sortedByAge, (base->count - 1)*sizeof(int));
+					base->sortedByDebt = (int*)realloc(base->sortedByDebt, (base->count - 1)*sizeof(int));
+					base->count--;
+
 					//чтобы в массивах с префиксом sortedBy остались только нужные нам индексы, заполняем и числами от 0 до нового count
 					for (int i = 0; i < base->count; i++){
 						base->sortedByName[i] = i;
@@ -388,7 +401,9 @@ void deleteRoomer(houseDatabase* base){
 				}
 			}
 		}
-	} while (userInput > 0);
+		if (userInput < 0 || userInput > 5)
+			printf("\nНеправильно введена команда\n");
+	} while (userInput != 0);
 }
 
 void setDataFromFile(houseDatabase* base, char* filename){
@@ -404,11 +419,11 @@ void setDataFromFile(houseDatabase* base, char* filename){
 	while (ftell(streamIn) < filelen){
 		simpleAdd(base);
 		fscanf(streamIn, " %s %s %d %d %d", 
-			(*base).houseRoomers[base->count - 1].name, 
-			(*base).houseRoomers[base->count - 1].surname,
-			&((*base).houseRoomers[base->count - 1].flatNum), 
-			&((*base).houseRoomers[base->count - 1].age), 
-			&((*base).houseRoomers[base->count - 1].debt));
+			base->houseRoomers[base->count - 1].name, 
+			base->houseRoomers[base->count - 1].surname,
+			&(base->houseRoomers[base->count - 1].flatNum), 
+			&(base->houseRoomers[base->count - 1].age), 
+			&(base->houseRoomers[base->count - 1].debt));
 		simpleSort(base);
 	}
 	fclose(streamIn);
@@ -464,16 +479,13 @@ void writeBase(houseDatabase* base){
 		}
 	}
 	if (userInput == 3){
-		fseek(streamIn, 0, SEEK_END);
-		int filelen = ftell(streamIn);
-		fseek(streamIn, 0, SEEK_SET);
-		for (int i = 0; i < (*base).count; i++){
+		for (int i = 0; i < base->count; i++){
 			fprintf(streamIn, "%s %s %d %d %d",
-				(*base).houseRoomers[base->sortedByFlatNum[i]].name,
-				(*base).houseRoomers[base->sortedByFlatNum[i]].surname,
-				(*base).houseRoomers[base->sortedByFlatNum[i]].flatNum,
-				(*base).houseRoomers[base->sortedByFlatNum[i]].age,
-				(*base).houseRoomers[base->sortedByFlatNum[i]].debt);
+				base->houseRoomers[base->sortedByFlatNum[i]].name,
+				base->houseRoomers[base->sortedByFlatNum[i]].surname,
+				base->houseRoomers[base->sortedByFlatNum[i]].flatNum,
+				base->houseRoomers[base->sortedByFlatNum[i]].age,
+				base->houseRoomers[base->sortedByFlatNum[i]].debt);
 			if (i != (base->count - 1)){
 				fprintf(streamIn, "\n");
 			}
@@ -517,10 +529,14 @@ void writeBase(houseDatabase* base){
 void searchRoomer(houseDatabase* base){
 	int userInput;
 	do {
-		printf(" ------Меню поиска жильца по параметрам------ ");
-		printf("\n Введите \n  * 1, если вы знаете имя \n  * 2, если знаете фамилию \n  * 3, если знаете номер квартиры \n  * 4, если знаете возраст \n");
-		printf("  * 5, если знаете размер задолженности\n\n");
-		printf("**** Введите любое отрицательное целое число для выхода из меню поиска ****\n");
+		printf("\n\n ------Меню поиска жильца по параметрам------ ");
+		printf("\nВведите:\n");
+		printf("	 1 - если знаете имя\n");
+		printf("	 2 - если знаете фамилию\n");
+		printf("	 3 - если знаете номер квартиры\n");
+		printf("	 4 - если знаете возраст\n");
+		printf("	 5 -  если знаете размер задолженности\n");
+		printf("	 0 -  для выходя из меню поиска\n\n");
 		scanf("%d", &userInput);
 		if (userInput == 1)    //
 		{
@@ -647,16 +663,21 @@ void searchRoomer(houseDatabase* base){
 				printf("\n\n");
 			}
 		}
-	} while (userInput > 0);
+		if (userInput < 0 || userInput > 5)
+			printf("\nНеправильно введена команда\n");
+	} while (userInput != 0);
 }
 void changeRoomer(houseDatabase* base){
 	int userInput;
 	do {
-		printf(" ------Меню редактирования жильца по параметрам------ \n");
-		printf("Введите имя, фамилию, номер квартиры или возраст жильца, информацию о котором хотите редактировать\n");
-		printf("\n Введите \n  * 1, если вы знаете имя \n  * 2, если знаете фамилию \n  * 3, если знаете номер квартиры \n  * 4, если знаете возраст \n");
-		printf("  * 5, если знаете размер задолженности\n\n");
-		printf("**** Введите любое отрицательное целое число для выхода из меню поиска ****\n");
+		printf("\n\n ------Меню редактирования жильца по параметрам------ \n");
+		printf("\nВведите:\n");
+		printf("	 1 - если знаете имя\n");
+		printf("	 2 - если знаете фамилию\n");
+		printf("	 3 - если знаете номер квартиры\n");
+		printf("	 4 - если знаете возраст\n");
+		printf("	 5 -  если знаете размер задолженности\n");
+		printf("	 0 -  для выходя из меню редактирования\n\n");
 		scanf("%d", &userInput);
 		if (userInput == 1)    //
 		{
@@ -687,9 +708,9 @@ void changeRoomer(houseDatabase* base){
 				scanf("%d", &input);
 				if (input <= justNumber && input >= 1){
 					printf("\n Введите имя жильца \n");
-					scanf("%s", &(base->houseRoomers[base->sortedByName[foundIndex + input - 1]].name));
+					scanf("%s", base->houseRoomers[base->sortedByName[foundIndex + input - 1]].name);
 					printf("\n Введите фамилию жильца \n");
-					scanf("%s", &(base->houseRoomers[base->sortedByName[foundIndex + input - 1]].surname));
+					scanf("%s", base->houseRoomers[base->sortedByName[foundIndex + input - 1]].surname);
 					printf("\n Введите номер квартиры жильца\n");
 					scanf("%d", &(base->houseRoomers[base->sortedByName[foundIndex + input - 1]].flatNum));
 					printf("\n Введите возраст жильца \n");
@@ -855,9 +876,9 @@ void changeRoomer(houseDatabase* base){
 				scanf("%d", &input);
 				if (input <= justNumber && input >= 1){
 					printf("\n Введите имя жильца \n");
-					scanf("%s", &(base->houseRoomers[base->sortedByDebt[foundIndex + input - 1]].name));
+					scanf("%s", base->houseRoomers[base->sortedByDebt[foundIndex + input - 1]].name);
 					printf("\n Введите фамилию жильца \n");
-					scanf("%s", &(base->houseRoomers[base->sortedByDebt[foundIndex + input - 1]].surname));
+					scanf("%s", base->houseRoomers[base->sortedByDebt[foundIndex + input - 1]].surname);
 					printf("\n Введите номер квартиры жильца\n");
 					scanf("%d", &(base->houseRoomers[base->sortedByDebt[foundIndex + input - 1]].flatNum));
 					printf("\n Введите возраст жильца \n");
@@ -868,7 +889,9 @@ void changeRoomer(houseDatabase* base){
 				}
 			}
 		}
-	} while (userInput > 0);
+		if (userInput < 0 || userInput > 5)
+			printf("\nНеправильно введена команда\n");
+	} while (userInput != 0);
 }
 
 
